@@ -1,4 +1,5 @@
 <?php
+include('./conexion.php');
 $corepage = explode('/', $_SERVER['PHP_SELF']);
 $corepage = end($corepage);
 if ($corepage !== 'index.php') {
@@ -15,6 +16,18 @@ if ($corepage !== 'index.php') {
     <li class="breadcrumb-item active" aria-current="page">Listado Estudiantes</li>
   </ol>
 </nav>
+<br>
+
+
+
+
+
+
+
+
+
+
+
 <?php if (isset($_GET['delete']) || isset($_GET['edit'])) { ?>
 
   <div role="alert" aria-live="assertive" aria-atomic="true" class="toast fade" data-autohide="true" data-animation="true" data-delay="2000">
@@ -39,7 +52,7 @@ if ($corepage !== 'index.php') {
       }
       if (isset($_GET['edit'])) {
         if ($_GET['edit'] == 'success') {
-          echo "<p style='color: green; font-weight: bold; '>Estudiante eliminado exitósamente</p>";
+          echo "<p style='color: green; font-weight: bold; '>Estudiante editado exitósamente</p>";
         }
       }
       if (isset($_GET['edit'])) {
@@ -50,10 +63,11 @@ if ($corepage !== 'index.php') {
       ?>
     </div>
   </div>
+
 <?php } ?>
 <table class="table  table-striped table-hover table-bordered" id="data">
   <thead class="thead-dark">
-    
+
     <tr>
       <th scope="col">Matricula</th>
       <th scope="col">Nombre</th>
@@ -67,9 +81,9 @@ if ($corepage !== 'index.php') {
     </tr>
   </thead>
   <tbody>
-    
+
     <?php
-    $query = mysqli_query($db_con, 'SELECT * FROM `student_info` ORDER BY `student_info`.`id` DESC;');
+    $query = mysqli_query($conexion, 'SELECT * FROM `student_info` ORDER BY `student_info`.`id` DESC;');
     $i = 1;
     while ($result = mysqli_fetch_array($query)) { ?>
       <tr>
@@ -95,8 +109,10 @@ if ($corepage !== 'index.php') {
     } ?>
 
   </tbody>
-  
+
 </table>
+
+
 <script type="text/javascript">
   function confirmationDelete(anchor) {
     var conf = confirm('Estás seguro que deseas eliminar este registro, esta opción es irreversible');

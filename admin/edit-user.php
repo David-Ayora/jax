@@ -1,4 +1,5 @@
 <?php 
+include('./conexion.php');
   $corepage = explode('/', $_SERVER['PHP_SELF']);
     $corepage = end($corepage);
     if ($corepage!=='index.php') {
@@ -15,7 +16,7 @@
 
 
   	$query = "UPDATE `users` SET `name`='$name', `email`='$email' WHERE `id`= $id";
-  	if (mysqli_query($db_con,$query)) {
+  	if (mysqli_query($conexion,$query)) {
   		$datainsert['insertsucess'] = '<p style="color: green;">Usuario actualizado exitósamente</p>';
   		header('Location: index.php?page=user-profile&edit=success');
   	}else{
@@ -36,7 +37,7 @@
 		if (isset($id)) {
 
 			$query = "SELECT  `name`, `email` FROM `users` WHERE `id`=$id;";
-			$result = mysqli_query($db_con,$query);
+			$result = mysqli_query($conexion,$query);
 			$row = mysqli_fetch_array($result);
 		}
 	 ?>

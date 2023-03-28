@@ -1,0 +1,79 @@
+<?php
+require('./fpdf/fpdf.php');
+
+class PDF extends FPDF
+{
+    // Cabecera de página
+    function Header()
+    {
+        // Logo
+        $this->Image('images/logo_unidad_educativa.png', 15, 3, 20);
+        // Arial bold 15
+
+        $this->SetFont('Arial', 'B', 11);
+        // Movernos a la derecha
+        $this->Cell(25);
+        // Título
+        $this->Cell(145, 0, utf8_decode('UNIDAD EDUCATIVA PARTICULAR "PRÍNCIPE DE PAZ"'), 0, 0, 'C');
+        // Salto de línea
+        $this->Ln(11);
+
+
+        $this->SetFont('Arial', 'B', 10);
+        // Movernos a la derecha
+        $this->Cell(25);
+        // Título
+        $this->Cell(145, -12, utf8_decode('La palabra de Dios en la educación integral de nuestros hijos, hace la diferencia'), 0, 0, 'C');
+        // Salto de línea
+        $this->Ln(10);
+
+
+        $this->SetFont('Arial', 'B', 10);
+        // Movernos a la derecha
+        $this->Cell(45);
+        // Título
+        $this->Cell(105, -20, utf8_decode('DEPARTAMENTO DE CONSEJERÍA ESTUDIANTIL'), 0, 0, 'C');
+        // Salto de línea
+        $this->SetLineWidth(0.2);
+        $this->SetFillColor(0, 255, 0);
+        $this->Line(190, 25, 25, 25);
+
+        // $this->Line(10, 50, 200, 50); // Dibuja una línea desde (10, 50) hasta (200, 50)
+
+    }
+
+    // Pie de página
+    function Footer()
+    {
+        // Posición: a 1,5 cm del final
+        $this->SetY(-15);
+        // Arial italic 8
+        $this->SetFont('Arial', 'I', 8);
+        // Número de página
+        $this->Cell(0, -5, utf8_decode("Dirección: Carlos V 3-176 y 1º de Mayo      Telefax: (593-7) 288-64-52 / 288-25-88 / 288-40-43"), 0, 0, 'C');
+
+
+        // Posición: a 1,5 cm del final
+        $this->SetY(-15);
+        // Arial italic 8
+        $this->SetFont('Arial', 'I', 8);
+        // Número de página
+        $this->Cell(0, 5, utf8_decode("EMAIL: ccarboldevida@yahoo.com; ueprincipedepaz@yahoo.com"), 0, 0, 'C');
+
+        // Posición: a 1,5 cm del final
+        $this->SetY(-15);
+        // Arial italic 8
+        $this->SetFont('Arial', 'I', 8);
+        // Número de página
+        $this->Cell(0, 15, utf8_decode("CUENCA-ECUADOR"), 0, 0, 'C');
+    }
+}
+
+require('./conexion.php');
+$pdf = new PDF();
+$pdf->AddPage();
+
+$pdf->SetFont('Arial', 'B', 16);
+$pdf->Cell(-115, 10, utf8_decode('Reporte de estudiantes'), 0, 0, 'C');  
+
+$pdf->Output();

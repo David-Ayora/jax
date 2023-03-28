@@ -1,4 +1,5 @@
-<?php require_once 'db_con.php'; 
+<?php
+include('./conexion.php');
 session_start();
 if(isset($_SESSION['user_login'])){
 	header('Location: index.php');
@@ -20,12 +21,15 @@ if(isset($_SESSION['user_login'])){
 
 		if(count($input_arr)==0){
 			$query = "SELECT * FROM `users` WHERE `username` = '$username';";
-			$result = mysqli_query($db_con, $query);
+			$result = mysqli_query($conexion, $query);
 			if (mysqli_num_rows($result)==1) {
 				$row = mysqli_fetch_assoc($result);
+				$rol = $row['rol'];
 				if ($row['password']==sha1(md5($password))) {
-					if ($row['status']=='activo') {
+					if ($row['status']=='Activo') {
 						$_SESSION['user_login']=$username;
+						$_SESSION['rol_login']=$rol;
+						
 						header('Location: index.php');
 					}else{
 						$status_inactive = "Su estado está inactivo, póngase en contacto con el administrador o el soporte";
@@ -39,6 +43,7 @@ if(isset($_SESSION['user_login'])){
 		}
 		
 	}
+
 
 
 ?>

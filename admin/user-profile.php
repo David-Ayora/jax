@@ -17,7 +17,7 @@ $user=  $_SESSION['user_login'];
   </ol>
 </nav>
 <?php 
-  $query = mysqli_query($db_con, "SELECT * FROM `users` WHERE `username` ='$user';");
+  $query = mysqli_query($conexion, "SELECT * FROM `users` WHERE `username` ='$user';");
   $row = mysqli_fetch_array($query);
 
  ?>
@@ -61,7 +61,7 @@ $user=  $_SESSION['user_login'];
           unlink('images/'.$row['photo']);
           $photofile = $_FILES['userphoto']['tmp_name'];
           $upphoto = $user.date('s-m-y-m-Y').$_FILES['userphoto']['name'];
-          if (mysqli_query($db_con, "UPDATE `users` SET `photo` = '$upphoto' WHERE `users`.`username` = '$user';")) {
+          if (mysqli_query($conexion, "UPDATE `users` SET `photo` = '$upphoto' WHERE `users`.`username` = '$user';")) {
             move_uploaded_file($photofile, 'images/'.$upphoto);
           }else{
             echo "Profile Picture Not Uploaded";

@@ -1,4 +1,5 @@
-<?php require_once 'admin/db_con.php'; ?>
+<?php 
+include('./conexion.php'); ?>
 <!doctype html>
 <html lang="en">
   <head>
@@ -76,7 +77,7 @@
           $choose= $_POST['choose'];
           $roll = $_POST['roll'];
           if (!empty($choose && $roll)) {
-            $query = mysqli_query($db_con,"SELECT * FROM `student_info` WHERE `roll`='$roll' AND `class`='$choose'");
+            $query = mysqli_query($conexion,"SELECT * FROM `student_info` WHERE `roll`='$roll' AND `class`='$choose'");
             if (!empty($row=mysqli_fetch_array($query))) {
               if ($row['roll']==$roll && $choose==$row['class']) {
                 $stroll= $row['roll'];
