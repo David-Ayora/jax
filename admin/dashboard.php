@@ -1,7 +1,6 @@
 <?php
 
 include('./conexion.php');
-include('./validar_cedula.php');
 $corepage = explode('/', $_SERVER['PHP_SELF']);
 $corepage = end($corepage);
 if ($corepage !== 'index.php') {
@@ -10,7 +9,6 @@ if ($corepage !== 'index.php') {
     header('Location: index.php?page=' . $corepage[0]);
   }
 }
-
 
 
 ?>
@@ -129,33 +127,43 @@ if ($corepage !== 'index.php') {
   <thead class="thead-dark">
     <tr>
       <th scope="col">Ficha</th>
+      <th scope="col">Cédula</th>
       <th scope="col">Nombre</th>
       <th scope="col">Apellido</th>
       <th scope="col">Dirección</th>
       <th scope="col">Aplica</th>
       <th scope="col">Promedio</th>
-      <th scope="col">Celular</th>
       <th scope="col">Acción</th>
     </tr>
   </thead>
   <tbody>
 
     <?php
-    $query = mysqli_query($conexion, 'SELECT * FROM `entrevista_estudiante` WHERE `entrevista_estudiante`.`ps_cupo` = "Asignado" ORDER BY `entrevista_estudiante`.`id_ficha` DESC; ');
+    $query = mysqli_query($conexion, 'SELECT * FROM `entrevista_estudiante` WHERE `entrevista_estudiante`.`ps_cupo` = "Asignado" ORDER BY `entrevista_estudiante`.`id_ficha` ASC; ');
 
-    while ($result = mysqli_fetch_array($query)) { ?>
+    while ($result = mysqli_fetch_array($query)) { 
+      
+      ?>
+
       <tr>
         <?php
-        echo '<td>' . $result['id_ficha'] . '</td>
+        echo 
+        '
+        <td>' . $result['id_ficha'] . '</td>
+        <td>' . $result['ps_cedula'] . '</td>
           <td>' . ucwords($result['ps_nombre']) . '</td>
           <td>' . ucwords($result['ps_apellido']) . '</td>
           <td>' . ucwords($result['ps_direccion']) . '</td>
           <td>' . ucwords($result['ps_año_aplica']) . '</td>
           <td>' . $result['ps_promedio'] . '</td>
-          <td>' . $result['ps_celular'] . '</td>
+          
           <td>
-            <a class="btn btn-xs btn-warning" href="index.php?page=edit_interview&id=' . base64_encode($result['id_ficha']) . '&name=' . base64_encode($result['ps_nombre']) . '">
-              <i class="fa fa-edit"></i></a>
+          <a class="btn btn-xs btn-success" href="index.php?page=add-student-dashboard&cedula=' . base64_encode($result['ps_cedula']) . '&grado=' . base64_encode($result['ps_año_aplica']) . '&nombre=' . base64_encode($result['ps_nombre'])  . '&apellido=' . base64_encode($result['ps_apellido'])  . '&fecha_nacimiento=' . base64_encode($result['ps_fecha'])  . '&direccion=' . base64_encode($result['ps_direccion'])  . '&descuento=' . base64_encode($result['ps_descuento']) . '">
+          <i class="fa fa-save"></i></a>
+          
+          <a class="btn btn-xs btn-warning" href="index.php?page=edit_interview&id=' . base64_encode($result['id_ficha']) . '&name=' . base64_encode($result['ps_nombre']) . '">
+          <i class="fa fa-edit"></i></a>
+          
 
              &nbsp; <a class="btn btn-xs btn-danger" onclick="javascript:confirmationDelete($(this));return false;" href="index.php?page=delete_interview&id=' . base64_encode($result['id_ficha']) . '">
              <i class="fas fa-trash-alt"></i></a></td>'; ?>

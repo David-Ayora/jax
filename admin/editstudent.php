@@ -14,7 +14,22 @@ $id = base64_decode($_GET['id']);
 $oldPhoto = base64_decode($_GET['photo']);
 
 
+// Añadir el año lectivo al formulario
+$query_año_lectivo = mysqli_query($conexion, 'SELECT * FROM año_lectivo ORDER BY id DESC;');
+$respuesta = mysqli_fetch_array($query_año_lectivo);
+$año_inicial = date("Y", strtotime($respuesta['periodo_inicio']));
+$año_final = date("Y", strtotime($respuesta['periodo_final']));
+$id_lectivo = $respuesta['id'];
+
+
+
+
+
 if (isset($_POST['updatestudent'])) {
+
+
+
+
 	$matricula = trim($_POST['matricula']);
 	$tipo = trim($_POST['check_new_estudiante']);
 	$last_name = trim($_POST['last_name']);

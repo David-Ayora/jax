@@ -99,7 +99,7 @@ if ($corepage !== 'index.php') {
           <td>' . $result['descuento'] . '</td>
           <td><img src="images/' . $result['photo'] . '" height="50px"></td>
           <td>
-            <a class="btn btn-xs btn-warning" href="index.php?page=editstudent&id=' . base64_encode($result['id']) . '&photo=' . base64_encode($result['photo']) . '">
+            <a class="btn btn-xs btn-warning" href="index.php?page=edit-student&id=' . base64_encode($result['id']) . '&photo=' . base64_encode($result['photo']) . '">
               <i class="fa fa-edit"></i></a>
 
              &nbsp; <a class="btn btn-xs btn-danger" onclick="javascript:confirmationDelete($(this));return false;" href="index.php?page=delete&id=' . base64_encode($result['id']) . '&photo=' . base64_encode($result['photo']) . '">

@@ -1,5 +1,6 @@
 <?php
 include('./conexion.php');
+include('./validar_cedula.php');
 
 // control de estructura de endpoint en el navegador (URL) 
 $corepage = explode('/', $_SERVER['PHP_SELF']);
@@ -11,6 +12,14 @@ if ($corepage !== 'index.php') {
 	}
 }
 
+
+$get_cedula = base64_decode($_GET['cedula']);
+$get_grado = base64_decode($_GET['grado']);
+$get_fecha_nacimiento_est = base64_decode($_GET['fecha_nacimiento']);
+$get_nombre_est = base64_decode($_GET['nombre']);
+$get_apellido_est = base64_decode($_GET['apellido']);
+$get_direccion_est = base64_decode($_GET['direccion']);
+$get_descuento_est = base64_decode($_GET['descuento']);
 
 // Añadir la matricula automaticamente
 $query_matricula = mysqli_query($conexion, 'SELECT max(matricula)+1 as matricula FROM student_info;');
@@ -241,7 +250,7 @@ if (isset($_POST['addstudent'])) {
 			<h4>Cedula del estudiante<span class="asterisk"> *</span></h4>
 		</div>
 		<div style="flex: 3;">
-			<input maxlength="10" onclick="validarCedula(this.value)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" title="Por favor, introduce solo números del teclado" name="prev_ci" type="text" class="form-control" id="prev_ci" value="<?= isset($f_ci_madre) ? $f_ci_madre : ''; ?>" required="">
+			<input maxlength="10" onclick="validarCedula(this.value)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" title="Por favor, introduce solo números del teclado" name="prev_ci" type="text" class="form-control" id="prev_ci" value="<?= isset($get_cedula) ? $get_cedula : ''; ?>" required="">
 		</div>
 	</div>
 	<hr>
@@ -266,19 +275,19 @@ if (isset($_POST['addstudent'])) {
 		<div style="flex: 3;">
 			<select name="grado_estudiantil_prev" class="form-control" id="grado_estudiantil_prev" required="">
 				<option>Selecciona</option>
-				<option value="Primero">Primero</option>
-				<option value="Segundo">Segundo</option>
-				<option value="Tercero">Tercero</option>
-				<option value="Cuarto">Cuarto</option>
-				<option value="Quinto">Quinto</option>
-				<option value="Sexto">Sexto</option>
-				<option value="Septimo">Septimo</option>
-				<option value="Octavo">Octavo</option>
-				<option value="Noveno">Noveno</option>
-				<option value="Decimo">Decimo</option>
-				<option value="Primero BGU">Primero BGU</option>
-				<option value="Segundo BGU">Segundo BGU</option>
-				<option value="Tercero BGU">Tercero BGU</option>
+				<option value="Primero" <?= $get_grado == 'Primero' ? 'selected' : '' ?>>Primero</option>
+				<option value="Segundo" <?= $get_grado == 'Segundo' ? 'selected' : '' ?>>Segundo</option>
+				<option value="Tercero" <?= $get_grado == 'Tercero' ? 'selected' : '' ?>>Tercero</option>
+				<option value="Cuarto"  <?= $get_grado == 'Cuarto' ? 'selected' : '' ?>>Cuarto</option>
+				<option value="Quinto"  <?= $get_grado == 'Quinto' ? 'selected' : '' ?>>Quinto</option>
+				<option value="Sexto"   <?= $get_grado == 'Sexto' ? 'selected' : '' ?>>Sexto</option>
+				<option value="Septimo" <?= $get_grado == 'Septimo' ? 'selected' : '' ?>>Septimo</option>
+				<option value="Octavo"  <?= $get_grado == 'Octavo' ? 'selected' : '' ?>>Octavo</option>
+				<option value="Noveno"  <?= $get_grado == 'Noveno' ? 'selected' : '' ?>>Noveno</option>
+				<option value="Decimo"  <?= $get_grado == 'Decimo' ? 'selected' : '' ?>>Decimo</option>
+				<option value="Primero BGU" <?= $get_grado == 'Primero BGU' ? 'selected' : '' ?>>Primero BGU</option>
+				<option value="Segundo BGU" <?= $get_grado == 'Segundo BGU' ? 'selected' : '' ?>>Segundo BGU</option>
+				<option value="Tercero BGU" <?= $get_grado == 'Tercero BGU' ? 'selected' : '' ?>>Tercero BGU</option>
 			</select>
 		</div>
 	</div><br><br>
@@ -334,16 +343,16 @@ if (isset($_POST['addstudent'])) {
 
 						<div class="form-group">
 							<label for="last_name">Apellidos<span class="asterisk"> *</span></label>
-							<input onkeypress="return /^[a-zA-Z\s]*$/.test(event.key)" name="last_name" type="text" class="form-control" id="last_name" value="<?= isset($last_name) ? $last_name : ''; ?>" required="">
+							<input onkeypress="return /^[a-zA-Z\s]*$/.test(event.key)" name="last_name" type="text" class="form-control" id="last_name" value="<?= isset($get_apellido_est) ? $get_apellido_est : ''; ?>" required="">
 						</div>
 						<div class="form-group">
 							<label for="name">Nombres<span class="asterisk"> *</span></label>
-							<input onkeypress="return /^[a-zA-Z\s]*$/.test(event.key)" name="name" type="text" class="form-control" id="name" value="<?= isset($name) ? $name : ''; ?>" required="">
+							<input onkeypress="return /^[a-zA-Z\s]*$/.test(event.key)" name="name" type="text" class="form-control" id="name" value="<?= isset($get_nombre_est) ? $get_nombre_est : ''; ?>" required="">
 						</div>
 
 						<div class="form-group">
 							<label for="birthdate">Fecha de nacimiento<span class="asterisk"> *</span></label>
-							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" title="Por favor, introduce solo números del teclado" name="birthdate" type="date" class="form-control" id="birthdate" value="<?= isset($birthdate) ? $birthdate : ''; ?>" required="">
+							<input onkeypress="return event.charCode >= 48 && event.charCode <= 57" title="Por favor, introduce solo números del teclado" name="birthdate" type="date" class="form-control" id="birthdate" value="<?= isset($get_fecha_nacimiento_est ) ? $get_fecha_nacimiento_est  : ''; ?>" required="">
 						</div>
 
 						<div class="form-group">
@@ -363,7 +372,7 @@ if (isset($_POST['addstudent'])) {
 						</div>
 						<div class="form-group">
 							<label for="address">Dirección<span class="asterisk"> *</span></label>
-							<input onkeypress="return /^[a-zA-Z\s]*$/.test(event.key)" name="address" type="text" value="<?= isset($address) ? $address : ''; ?>" class="form-control" id="address" required="">
+							<input onkeypress="return /^[a-zA-Z\s]*$/.test(event.key)" name="address" type="text" value="<?= isset($get_direccion_est) ? $get_direccion_est : ''; ?>" class="form-control" id="address" required="">
 						</div>
 
 						<div class="form-group">
@@ -374,7 +383,7 @@ if (isset($_POST['addstudent'])) {
 
 						<div class="form-group">
 							<label for="descuento">Porcentaje de descuento<span class="asterisk"> *</span></label>
-							<input maxlength="3" min="0" max="100" pattern="^([1-9]|[1-9][0-9]|100)$" title="Por favor ingrese solo 3 números del 0 al 100" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" title="Por favor, introduce solo números del teclado" name="descuento" type="text" class="form-control" id="descuento" style="width: 100px;" value="<?= isset($descuento) ? $descuento : ''; ?>" required="">
+							<input maxlength="3" min="0" max="100" pattern="^([1-9]|[1-9][0-9]|100)$" title="Por favor ingrese solo 3 números del 0 al 100" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" title="Por favor, introduce solo números del teclado" name="descuento" type="text" class="form-control" id="descuento" style="width: 100px;" value="<?= isset($get_descuento_est) ? $get_descuento_est : ''; ?>" required="">
 						</div>
 
 					</div>
@@ -544,6 +553,8 @@ if (isset($_POST['addstudent'])) {
 					<label for="f_convive_parentesco">Parentesco <span class="optional"> (Opcional)</label>
 					<input onkeypress="return /^[a-zA-Z\s]*$/.test(event.key)" name="f_convive_parentesco" type="text" class="form-control" id="f_convive_parentesco" value="<?= isset($f_convive_parentesco) ? $f_convive_parentesco : ''; ?>">
 				</div>
+				<br><br><br><br>
+
 				<div class="form-group">
 					<label for="f_tipo_vivienda">Tipo de vivienda<span class="asterisk"> *</span></label>
 					<select name="f_tipo_vivienda" class="form-control" id="f_tipo_vivienda" required="">

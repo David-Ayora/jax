@@ -120,7 +120,7 @@ if (isset($_SESSION['rol_login'])) {
 
             <?php
             echo 
-            $datainsertmenu['menu'];
+            $datainsertmenu['menu'];  
             ?> 
         </div>
       </div>

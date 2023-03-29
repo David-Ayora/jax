@@ -12,6 +12,7 @@ if ($corepage !== 'index.php') {
 
 // Ficha de al fila 
 $id_ficha = base64_decode($_GET['id']);
+// echo $id_ficha;
 
 
 
@@ -20,7 +21,7 @@ if (isset($_POST['entrevista'])) {
 
 
 	// DATOS GENERALES
-
+	$ps_cedula = $_POST['ps_cedula'];
 	$ps_nombre = $_POST['ps_nombre'];
 	$ps_apellido = $_POST['ps_apellido'];
 	$ps_lugar_nacimiento = $_POST['ps_lugar_nacimiento'];
@@ -35,8 +36,11 @@ if (isset($_POST['entrevista'])) {
 	$ps_altercado = $_POST['ps_altercado'];
 	$ps_email = $_POST['ps_email'];
 	$ps_celular = $_POST['ps_celular'];
+	$ps_descuento = $_POST['ps_descuento'];
+	$ps_observaciones = $_POST['ps_observaciones'];
 
 	$query_select_entrevistado = "UPDATE entrevista_estudiante SET 
+	ps_cedula = '$ps_cedula',
 	ps_nombre = '$ps_nombre', 
 	ps_apellido = '$ps_apellido', 
 	ps_lugar_nacimiento = '$ps_lugar_nacimiento', 
@@ -50,7 +54,9 @@ if (isset($_POST['entrevista'])) {
 	ps_razon_cambio = '$ps_razon_cambio', 
 	ps_altercado = '$ps_altercado', 
 	ps_email = '$ps_email', 
-	ps_celular = '$ps_celular' 
+	ps_celular = '$ps_celular',
+	ps_descuento = '$ps_descuento' ,
+	ps_observaciones = '$ps_observaciones' 
 	WHERE id_ficha = $id_ficha;";
 
 
@@ -90,8 +96,9 @@ if (isset($_POST['entrevista'])) {
 	if (mysqli_query($conexion, $query_update_familiar)) {
 		if (mysqli_query($conexion, $query_select_entrevistado)) {
 			$datainsert['insertsucess'] = '<p style="color: green;">Estudiante Actualizado!</p>';
+			// header('Location: index.php?page=dashboard&edit=success');
 		} else {
-			header('Location: index.php?page=dashboard&edit=success');
+			header('Location: index.php?page=dashboard&edit=error');
 		}
 	} else {
 
@@ -104,7 +111,7 @@ if (isset($_POST['entrevista'])) {
 
 // Entrevistado
 if (isset($id_ficha)) {
-	$query_select = "SELECT * FROM `entrevista_estudiante` WHERE `id_ficha`=$id_ficha";
+	$query_select = "SELECT * FROM entrevista_estudiante WHERE id_ficha = $id_ficha";
 	$result = mysqli_query($conexion, $query_select);
 	$row = mysqli_fetch_array($result);
 }
@@ -164,7 +171,10 @@ if (isset($id_ficha)) {
 
 		<form enctype="multipart/form-data" method="POST">
 
-
+			<div class="form-group">
+				<label for="ps_cedula">Cédula de estudiante <span class="asterisk"> *</span></label>
+				<input maxlength="10" onclick="validarCedula(this.value)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" title="Por favor, introduce solo números del teclado" name="ps_cedula" type="text" class="form-control" id="ps_cedula" value="<?php echo $row['ps_cedula']; ?>" required="">
+			</div>
 			<div class="form-group">
 				<label for="ps_apellido">Apellidos</label>
 				<input name="ps_apellido" type="text" class="form-control" id="ps_apellido" value="<?php echo $row['ps_apellido']; ?>" required="">
@@ -354,6 +364,15 @@ if (isset($id_ficha)) {
 				<label for="ps_gastos_familiar" style="width: 70px;display: auto;margin-left: 50px;margin-right: 10px; text-align: right;">Padre</label>
 				<input name="ps_gastos_familiar" type="radio" class="form-control" style="height: 30px !important; width: 20px;" value="Padre" <?= $row_f['ps_gastos_familiar'] == 'Padre' ? 'checked' : '' ?> required="">
 
+			</div>
+			<div class="form-group">
+				<label for="ps_descuento">Porcentaje de descuento<span class="asterisk"> *</span></label>
+				<input maxlength="3" min="0" max="100" pattern="^([1-9]|[1-9][0-9]|100)$" title="Por favor ingrese solo 3 números del 0 al 100" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" title="Por favor, introduce solo números del teclado" name="ps_descuento" type="text" class="form-control" id="ps_descuento" style="width: 100px;" value="<?php echo $row['ps_descuento']; ?>" required="">
+			</div>
+			<!-- Observaciones se inserta en la tabla de student_info -->
+			<div class="form-group">
+				<label for="ps_observaciones">Observaciones <span class="optional"> (Opcional)</label>
+				<input pattern="[A-Za-z0-9\s\-\.\,\;\:\!\@\#\$\%\^\&\*\(\)\_\+\=\{\}\[\]\|\\\/\?]*" name="ps_observaciones" type="text" class="form-control" id="ps_observaciones" value="<?php echo $row['ps_observaciones']; ?>">
 			</div>
 
 			<br>

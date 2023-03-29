@@ -17,7 +17,7 @@ if (isset($_POST['entrevista'])) {
 	$id_ficha = mysqli_query($conexion, 'SELECT if(max(id_ficha)>0, max(id_ficha)+1, 1) as id_ficha FROM entrevista_ficha;');
 	while ($result = mysqli_fetch_array($id_ficha)) {
 		$result_id = $result['id_ficha'];
-	} 
+	}
 	$id_ficha = $result_id;
 
 	if (empty($id_ficha)) {
@@ -32,11 +32,11 @@ if (isset($_POST['entrevista'])) {
 
 
 		// DATOS GENERALES
-
+		$ps_cedula = trim($_POST['ps_cedula']);
 		$ps_nombre = trim($_POST['ps_nombre']);
 		$ps_apellido = trim($_POST['ps_apellido']);
 		$ps_lugar_nacimiento = trim($_POST['ps_lugar_nacimiento']);
-		$ps_fecha = $_POST['ps_fecha'] ;
+		$ps_fecha = $_POST['ps_fecha'];
 		// . date("Md-Y")
 		$ps_direccion = trim($_POST['ps_direccion']);
 		$ps_año_aplica = trim($_POST['ps_año_aplica']);
@@ -53,9 +53,9 @@ if (isset($_POST['entrevista'])) {
 
 
 		$query_entrevistado = "INSERT INTO entrevista_estudiante 
-		(`id_ficha`, `ps_nombre`, `ps_apellido`, `ps_lugar_nacimiento`, `ps_fecha`, `ps_direccion`, `ps_año_aplica`, `ps_ist_procede`, 
+		(`id_ficha`, `ps_cedula` , `ps_nombre`, `ps_apellido`, `ps_lugar_nacimiento`, `ps_fecha`, `ps_direccion`, `ps_año_aplica`, `ps_ist_procede`, 
 		`ps_promedio`, `ps_conducta`, `ps_razon`, `ps_razon_cambio`, `ps_altercado`, `ps_email`, `ps_celular`, `ps_cupo`) VALUES 	
-		('$id_ficha', '$ps_nombre', '$ps_apellido', '$ps_lugar_nacimiento', '$ps_fecha', '$ps_direccion', '$ps_año_aplica', '$ps_ist_procede','$ps_promedio', 
+		('$id_ficha','$ps_cedula', '$ps_nombre', '$ps_apellido', '$ps_lugar_nacimiento', '$ps_fecha', '$ps_direccion', '$ps_año_aplica', '$ps_ist_procede','$ps_promedio', 
 		'$ps_conducta', '$ps_razon', '$ps_razon_cambio', '$ps_altercado', '$ps_email', '$ps_celular', '$ps_cupo');";
 
 
@@ -95,8 +95,6 @@ if (isset($_POST['entrevista'])) {
 			} catch (Exception $th) {
 				echo "<br>Mensaje de error: " . $th->getMessage();
 			}
-
-			
 		} else {
 			$datainsert['inserterror'] = '<p style="color: red;">Estudiante no ingresado, revise la información de Datos Generales.</p>';
 			mysqli_close($conexion);
@@ -160,7 +158,10 @@ if (isset($_POST['entrevista'])) {
 
 		<form enctype="multipart/form-data" method="POST">
 
-
+			<div class="form-group">
+				<label for="ps_cedula">Cédula de estudiante <span class="asterisk"> *</span></label>
+				<input maxlength="10" onclick="validarCedula(this.value)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" title="Por favor, introduce solo números del teclado" name="ps_cedula" type="text" class="form-control" id="ps_cedula" value="<?= isset($ps_cedula) ? $ps_cedula : ''; ?>" required="">
+			</div>
 			<div class="form-group">
 				<label for="ps_apellido">Apellidos</label>
 				<input name="ps_apellido" type="text" class="form-control" id="ps_apellido" value="<?= isset($ps_apellido) ? $ps_apellido : ''; ?>" required="">
@@ -359,6 +360,15 @@ if (isset($_POST['entrevista'])) {
 					<option value="No asignado">No asignado</option>
 				</select>
 			</div>
+			<div class="form-group">
+				<label for="ps_descuento">Porcentaje de descuento<span class="asterisk"> *</span></label>
+				<input maxlength="3" min="0" max="100" pattern="^([1-9]|[1-9][0-9]|100)$" title="Por favor ingrese solo 3 números del 0 al 100" step="1" onkeypress="return event.charCode >= 48 && event.charCode <= 57" title="Por favor, introduce solo números del teclado" name="ps_descuento" type="text" class="form-control" id="ps_descuento" style="width: 100px;" value="<?= isset($ps_descuento) ? $ps_descuento : '0'; ?>" required="">
+			</div>
+			<!-- Observaciones se inserta en la tabla de student_info -->
+			<div class="form-group">
+				<label for="ps_observaciones">Observaciones <span class="optional"> (Opcional)</label>
+				<input pattern="[A-Za-z0-9\s\-\.\,\;\:\!\@\#\$\%\^\&\*\(\)\_\+\=\{\}\[\]\|\\\/\?]*" name="ps_observaciones" type="text" class="form-control" id="ps_observaciones" value="<?= isset($ps_observaciones) ? $ps_observaciones : ''; ?>">
+			</div>
 
 
 			<br>
@@ -373,3 +383,33 @@ if (isset($_POST['entrevista'])) {
 	</div>
 
 </div>
+<script>
+	function validarCedula(cedula) {
+		// Verificar que la cédula tiene 10 dígitos
+		if (cedula.length !== 10) {
+			return false;
+		}
+
+		// Verificar que la cédula está compuesta solo de dígitos
+		if (!/^\d+$/.test(cedula)) {
+			return false;
+		}
+
+		// Verificar el dígito verificador
+		var digitoVerificador = parseInt(cedula.charAt(9));
+		var suma = 0;
+		var coeficientes = [2, 1, 2, 1, 2, 1, 2, 1, 2];
+		for (var i = 0; i < 9; i++) {
+			var digito = parseInt(cedula.charAt(i)) * coeficientes[i];
+			if (digito > 9) {
+				digito -= 9;
+			}
+			suma += digito;
+		}
+		var resultado = (suma % 10 === 0) ? 0 : 10 - (suma % 10);
+
+		if (resultado === digitoVerificador) {} else {
+			alert("Cedula No Valida");
+		}
+	}
+</script>
