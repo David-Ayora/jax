@@ -1,7 +1,5 @@
 <?php
 include('./conexion.php');
-include('./validar_cedula.php');
-
 // control de estructura de endpoint en el navegador (URL) 
 $corepage = explode('/', $_SERVER['PHP_SELF']);
 $corepage = end($corepage);
@@ -16,7 +14,7 @@ $oldPhoto = base64_decode($_GET['photo']);
 
 if (isset($id)) {
 
-    echo "ID: " . $id . "<br>";
+    // echo "ID: " . $id . "<br>";
     // Información del estudiante
     $query_select = "SELECT * FROM student_info WHERE id = $id";
     $result_s = mysqli_query($conexion, $query_select);

@@ -7,7 +7,7 @@ if (isset($_SESSION['user_login'])) {
 	$photo = base64_decode($_GET['photo']);
 	if(mysqli_query($conexion,"DELETE FROM student_info WHERE id = '$id'")){
 		unlink('images/'.$photo);
-		header('Location: index.php?page=all-student&delete=success');
+		header('Location: /admin/index.php?page=all-student');
 	}else{
 		header('Location: index.php?page=all-student&delete=error');
 	}

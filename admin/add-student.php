@@ -59,8 +59,8 @@ if (isset($_POST['addstudent'])) {
 	$descuento = trim($_POST['descuento']);
 	$observaciones = trim($_POST['observaciones']);
 
-	$query_estudiante = "INSERT INTO `student_info` ( `matricula`, `tipo`, `last_name`, `name`, `grado_estudiantil`, `birthdate`, `nacionalidad`, `sexo`, `direccion`, `sector`, `photo`, `observaciones`, `descuento`) 
-	VALUES ('$matricula', '$tipo', '$last_name', '$name', '$curso_matricular', '$birthdate', '$nacionalidad', '$sexo', '$address', '$sector', '$photo', '$observaciones', '$descuento');";
+	$query_estudiante = "INSERT INTO `student_info` ( `matricula`,`cedula`, `tipo`, `last_name`, `name`, `grado_estudiantil`, `birthdate`, `nacionalidad`, `sexo`, `direccion`, `sector`, `photo`, `observaciones`, `descuento`) 
+	VALUES ('$matricula', '$prev_ci', '$tipo', '$last_name', '$name', '$curso_matricular', '$birthdate', '$nacionalidad', '$sexo', '$address', '$sector', '$photo', '$observaciones', '$descuento');";
 
 
 	// INFORMACIÓN DEL REPRESENTANTE
@@ -147,7 +147,7 @@ if (isset($_POST['addstudent'])) {
 					$result_id = $result['id_estudiante'];
 				}
 				$id_estudiante = $result_id;
-				echo $id_estudiante;
+				// echo $id_estudiante;
 				if (isset($id_estudiante)) {
 					// siguientes datos a subir 
 
@@ -241,7 +241,7 @@ if (isset($_POST['addstudent'])) {
 			<h4>Cedula del estudiante<span class="asterisk"> *</span></h4>
 		</div>
 		<div style="flex: 3;">
-			<input maxlength="10" onclick="validarCedula(this.value)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" title="Por favor, introduce solo números del teclado" name="prev_ci" type="text" class="form-control" id="prev_ci" value="<?= isset($f_ci_madre) ? $f_ci_madre : ''; ?>" required="">
+			<input maxlength="10" onclick="validarCedula(this.value)" onkeypress="return event.charCode >= 48 && event.charCode <= 57" title="Por favor, introduce solo números del teclado" name="prev_ci" type="text" class="form-control" id="prev_ci" value="<?= isset($prev_ci) ? $prev_ci : ''; ?>" required="">
 		</div>
 	</div>
 	<hr>

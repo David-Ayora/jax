@@ -82,7 +82,6 @@ if (isset($_SESSION['rol_login'])) {
       
       $datainsertmenu['menu'] = '
       <a href="index.php?page=interview" class="list-group-item list-group-item-action"><i class="fa fa-question"></i> Entrevistar Estudiante</a>
-      <a href="index.php?page=all-student" class="list-group-item list-group-item-action"><i class="fa fa-users"></i> Todos los Estudiantes</a>
       <a href="index.php?page=user-profile" class="list-group-item list-group-item-action"><i class="fa fa-user"></i> Perfil de Usuario</a>
     ';
       break;

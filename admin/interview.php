@@ -49,14 +49,16 @@ if (isset($_POST['entrevista'])) {
 		$ps_email = trim($_POST['ps_email']);
 		$ps_celular = trim($_POST['ps_celular']);
 		$ps_cupo = trim($_POST['ps_cupo']);
+		$ps_descuento = trim($_POST['ps_descuento']);
+		$ps_observaciones = trim($_POST['ps_observaciones']);
 
 
 
 		$query_entrevistado = "INSERT INTO entrevista_estudiante 
 		(`id_ficha`, `ps_cedula` , `ps_nombre`, `ps_apellido`, `ps_lugar_nacimiento`, `ps_fecha`, `ps_direccion`, `ps_año_aplica`, `ps_ist_procede`, 
-		`ps_promedio`, `ps_conducta`, `ps_razon`, `ps_razon_cambio`, `ps_altercado`, `ps_email`, `ps_celular`, `ps_cupo`) VALUES 	
+		`ps_promedio`, `ps_conducta`, `ps_razon`, `ps_razon_cambio`, `ps_altercado`, `ps_email`, `ps_celular`, `ps_cupo`, `ps_descuento`, `ps_observaciones`) VALUES 	
 		('$id_ficha','$ps_cedula', '$ps_nombre', '$ps_apellido', '$ps_lugar_nacimiento', '$ps_fecha', '$ps_direccion', '$ps_año_aplica', '$ps_ist_procede','$ps_promedio', 
-		'$ps_conducta', '$ps_razon', '$ps_razon_cambio', '$ps_altercado', '$ps_email', '$ps_celular', '$ps_cupo');";
+		'$ps_conducta', '$ps_razon', '$ps_razon_cambio', '$ps_altercado', '$ps_email', '$ps_celular', '$ps_cupo', '$ps_descuento', '$ps_observaciones');";
 
 
 		// HISTORIA FAMILIAR

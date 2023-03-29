@@ -68,12 +68,46 @@ class PDF extends FPDF
         $this->Cell(0, 15, utf8_decode("CUENCA-ECUADOR"), 0, 0, 'C');
     }
 }
-
 require('./conexion.php');
 $pdf = new PDF();
 $pdf->AddPage();
 
 $pdf->SetFont('Arial', 'B', 16);
-$pdf->Cell(-115, 10, utf8_decode('Reporte de estudiantes'), 0, 0, 'C');  
+$pdf->Cell(-115, 10, utf8_decode('REPORTE GENERAL'), 0, 0, 'C');
 
-$pdf->Output();
+
+$pdf->SetXY(10, 50);
+$pdf->SetFont('Arial', 'B', 9);
+$pdf->Cell(33, 10, utf8_decode('Emision del reporte:'), 0, 0, 'L');
+setlocale(LC_TIME, 'es_ES.UTF-8', 'es_ES', 'Spanish_Spain', 'Spanish');
+$fecha_actual = strftime('%A, %d de %B de %Y', time());
+$pdf->Cell(50, 10, ucfirst($fecha_actual), 0, 1, 'L');
+
+$pdf->SetXY(10, 80);
+$pdf->SetFont('Arial', 'B', 9);
+$pdf->Cell(180, 10, 'Informe General de Estudiantes en la Unidad Educativa "Principe de paz"', 1, 0, 'C');
+
+$pdf->SetXY(10, 90);
+$pdf->SetFont('Arial', 'B', 9);
+$pdf->Cell(140, 10, "Grado estudiantil ", 1, 0, 'L');
+$pdf->Cell(40, 10, "Cantidad de estudiantes", 1, 1, 'L');
+$grados_estudiantiles = array("Primero", "Segundo", "Tercero", "Cuarto", "Quinto", "Sexto", "Septimo", "Octavo", "Noveno", "Decimo", "Primero BGU", "Segundo BGU", "Tercero BGU");
+
+
+for ($i = 0; $i < count($grados_estudiantiles); $i++) {
+    $pdf->Cell(140, 10, $grados_estudiantiles[$i], 1, 0, 'L');
+
+    $sentencia = "SELECT count(grado_estudiantil) as '" . $grados_estudiantiles[$i] . "' FROM student_info WHERE grado_estudiantil = '" . $grados_estudiantiles[$i] . "'";
+    $query_report = mysqli_query($conexion, $sentencia);
+
+    $valor_recorrido = mysqli_fetch_assoc($query_report);
+    $nombreColumna = mysqli_fetch_field_direct($query_report, 0)->name;
+    if ($nombreColumna == $grados_estudiantiles[$i]) {
+        $valor = $valor_recorrido[$grados_estudiantiles[$i]];
+    } else {
+        $valor = 0;
+    }
+
+    $pdf->Cell(40, 10, $valor, 1, 1, 'C');
+}
+$pdf->Output('Reporte General '.$fecha_actual, 'I');

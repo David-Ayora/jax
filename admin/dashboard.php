@@ -120,8 +120,6 @@ if ($corepage !== 'index.php') {
 </div>
 <hr>
 
-
-
 <h3>Reporte de Entrevistados</h3>
 <table class="table  table-striped table-hover table-bordered" id="data">
   <thead class="thead-dark">

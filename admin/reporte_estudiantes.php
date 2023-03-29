@@ -1,5 +1,6 @@
 <?php
 require('./fpdf/fpdf.php');
+include('./conexion.php');
 
 class PDF extends FPDF
 {
@@ -131,10 +132,8 @@ $pdf->Cell(70, 10, utf8_decode('21 de marzo del 2023'), 0,1, 'L');
 
 $pdf->Ln();
 
-
-require('./conexion.php');
-
-$consulta = "SELECT * FROM student_info WHERE id = 132;";
+$id = base64_decode($_GET['id']);
+$consulta = "SELECT * FROM student_info WHERE id = $id;";
 $resultado = $conexion->query($consulta);
 $cadena1= "Luego de la entrevista y posterior análisis de la documentación de la estudiante, ";
 $cadena2= 'el Rectorado juntamente con el Departamento de Consejería Estudiantil de la Unidad Educativa Particular "Príncipe de Paz", acuerdan: otorgar el cupo solicitado por la Sra. Maritza Sánchez, representante legal de la postulante, para ';
@@ -144,19 +143,19 @@ while ($row = $resultado->fetch_assoc()) {
 $matricula = $row['matricula'];
 $name_pdf=$matricula;
 $pdf->SetXY(18, 100);
-$pdf->MultiCell(175, 10, utf8_decode($cadena1 . $row['name'] . " " .$row['last_name'] . $cadena2 . $row['grado_estudiantil'] .  $cadena3 ) ,0, 'L',false,50,50);
+$pdf->MultiCell(175, 10, utf8_decode($cadena1 . $row['name'] . " " .$row['last_name'] . " con numero de cedula ".$row['cedula']. " ". $cadena2 . $row['grado_estudiantil'] .  $cadena3 ) ,0, 'L',false,50,50);
 }
 
-$pdf->SetXY(40, 150);
+$pdf->SetXY(36, 160);
 $pdf->Cell(158, 10, utf8_decode('-  Acompañamiento continúo en tareas y trabajos.'), 0,1, 'L');
-$pdf->SetXY(40, 160);
+$pdf->SetXY(37, 170);
 $pdf->Cell(158, 10, utf8_decode('-  Comunicación constante con la Unidad Educativa. '), 0,1, 'L');
-$pdf->SetXY(40, 170);
+$pdf->SetXY(37, 180);
 $pdf->Cell(158, 10, utf8_decode('-  Compromiso y participación en las actividades realizadas por la Institución'), 0,1, 'L');
-$pdf->SetXY(40, 180);
+$pdf->SetXY(37, 190);
 $pdf->Cell(158, 10, utf8_decode('-  Cumplimento de las obligaciones como representante legal. '), 0,1, 'L');
 
-$pdf->SetXY(22, 200);
+$pdf->SetXY(22, 210);
 $pdf->Cell(158, 10, utf8_decode('Atentamente,'), 0,1, 'C');
 
 
@@ -172,4 +171,4 @@ $pdf->SetXY(125, 256);
 $pdf->Cell(58, 10, utf8_decode('DECE'), 0,1, 'C');
 
 
-$pdf->Output($name_pdf, 'D');
+$pdf->Output($name_pdf, 'I');
