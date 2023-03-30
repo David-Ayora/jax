@@ -1,6 +1,6 @@
 <?php
 require('./fpdf/fpdf.php');
-
+$curso_seleccionado = $_GET['seleccion'];
 class PDF extends FPDF
 {
     // Cabecera de página
@@ -85,28 +85,19 @@ $pdf->Cell(50, 10, ucfirst($fecha_actual), 0, 1, 'L');
 
 $pdf->SetXY(15, 80);
 $pdf->SetFont('Arial', 'B', 9);
-$pdf->Cell(180, 10, 'Informe General de Estudiantes en la Unidad Educativa "Principe de paz"', 1, 0, 'C');
+$pdf->Cell(180, 10, 'Informe de Curso de Estudiantes en la Unidad Educativa "Principe de paz"', 1, 0, 'C');
 
 $pdf->SetXY(15, 90);
 $pdf->SetFont('Arial', 'B', 9);
 $pdf->Cell(140, 10, "Grado estudiantil ", 1, 0, 'L');
 $pdf->Cell(40, 10, "Cantidad de estudiantes", 1, 1, 'L');
-$grados_estudiantiles = array("Primero", "Segundo", "Tercero", "Cuarto", "Quinto", "Sexto", "Septimo", "Octavo", "Noveno", "Decimo", "Primero BGU", "Segundo BGU", "Tercero BGU");
+$sentencia = "SELECT COUNT(*) as cantidad FROM student_info WHERE grado_estudiantil = '$curso_seleccionado';";
+$query_report = mysqli_query($conexion, $sentencia);
+$valor_recorrido = mysqli_fetch_assoc($query_report);
+$pdf->SetX(15);
+$pdf->Cell(140, 10, $curso_seleccionado, 1, 0, 'L');
 
 
-for ($i = 0; $i < count($grados_estudiantiles); $i++) {
-    $pdf->SetX(15);
-    $pdf->Cell(140, 10, $grados_estudiantiles[$i], 1, 0, 'L');
-    $sentencia = "SELECT count(grado_estudiantil) as '" . $grados_estudiantiles[$i] . "' FROM student_info WHERE grado_estudiantil = '" . $grados_estudiantiles[$i] . "'";
-    $query_report = mysqli_query($conexion, $sentencia);
-    $valor_recorrido = mysqli_fetch_assoc($query_report);
-    $nombreColumna = mysqli_fetch_field_direct($query_report, 0)->name;
-    if ($nombreColumna == $grados_estudiantiles[$i]) {
-        $valor = $valor_recorrido[$grados_estudiantiles[$i]];
-    } else {
-        $valor = 0;
-    }
+$pdf->Cell(40, 10, $valor_recorrido['cantidad'], 1, 1, 'C');
 
-    $pdf->Cell(40, 10, $valor, 1, 1, 'C');
-}
-$pdf->Output('Reporte General '.$fecha_actual, 'I');
+$pdf->Output('Reporte General ' . $fecha_actual, 'I');
