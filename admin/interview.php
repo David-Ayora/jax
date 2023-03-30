@@ -14,21 +14,19 @@ if ($corepage !== 'index.php') {
 
 
 if (isset($_POST['entrevista'])) {
-	$id_ficha = mysqli_query($conexion, 'SELECT if(max(id_ficha)>0, max(id_ficha)+1, 1) as id_ficha FROM entrevista_ficha;');
-	while ($result = mysqli_fetch_array($id_ficha)) {
+
+	$query_id_ficha = mysqli_query($conexion, 'SELECT if(max(id_ficha)>0, max(id_ficha)+1, max(id_ficha)+2) as id_ficha FROM entrevista_ficha;');
+	while ($result = mysqli_fetch_array($query_id_ficha)) {
 		$result_id = $result['id_ficha'];
 	}
 	$id_ficha = $result_id;
 
 	if (empty($id_ficha)) {
-
-		echo intval($id_ficha) . "<br><br><br><br>";
-
-		echo "<br><br>Algo Malo<br><br>";
-		$id_ficha = 1;
-		$datainsert['inserterror'] = '<p style="color: red;">Ups! Ha ocurrido un error con el primer registro de la base de datos.</p>';
+		echo "<br><br>ID ficha vacia o indefinida<br><br>";
+		$datainsert['inserterror'] = '<p style="color: red;">Ups! Ha ocurrido un error con la ficha de registro. Vuelve intentarlo </p>';
 	} else {
 		// echo $id_ficha;
+
 
 
 		// DATOS GENERALES
@@ -37,7 +35,6 @@ if (isset($_POST['entrevista'])) {
 		$ps_apellido = trim($_POST['ps_apellido']);
 		$ps_lugar_nacimiento = trim($_POST['ps_lugar_nacimiento']);
 		$ps_fecha = $_POST['ps_fecha'];
-		// . date("Md-Y")
 		$ps_direccion = trim($_POST['ps_direccion']);
 		$ps_año_aplica = trim($_POST['ps_año_aplica']);
 		$ps_ist_procede = trim($_POST['ps_ist_procede']);
@@ -81,21 +78,30 @@ if (isset($_POST['entrevista'])) {
 	(`id_ficha`, `ps_nombre_representante`, `ps_nombre_padre`, `ps_ocupacion_padre`, `ps_lugar_trabajo_padre`, `ps_nombre_madre`, `ps_ocupacion_madre`, `ps_lugar_trabajo_madre`, `ps_estado_civil_representante`, `ps_relacion_familiar`, `ps_tiempo_con_estudiante`, `ps_futuro_para_estudiante`, `ps_desarrollo_academico_estudiante`, `ps_gastos_familiar`) VALUES
 	 ( '$id_ficha', '$ps_nombre_representante', '$ps_nombre_padre', '$ps_ocupacion_padre', '$ps_lugar_trabajo_padre', '$ps_nombre_madre', '$ps_ocupacion_madre', '$ps_lugar_trabajo_madre', '$ps_estado_civil_representante', '$ps_relacion_familiar', '$ps_tiempo_con_estudiante', '$ps_futuro_para_estudiante', '$ps_desarrollo_academico_estudiante', '$ps_gastos_familiar') ";
 
-		$query_ficha = "SELECT  if(max(id_ficha)>0, max(id_ficha), '1') as id_ficha FROM entrevista_ficha;";
+		// $query_ficha = "SELECT  if(max(id_ficha)>0, max(id_ficha), '1') as id_ficha FROM entrevista_ficha;";
 
 		if (mysqli_query($conexion, $query_entrevistado)) {
+			if (mysqli_query($conexion, $query_entrevistado_familiar)) {
 
+				$query_select_entrevistado = "SELECT id_entrevistado FROM entrevista_estudiante WHERE id_ficha = $id_ficha";
+				$entrevistado = mysqli_query($conexion, $query_select_entrevistado);
+				$id_entrevista_estudiante = mysqli_fetch_assoc($entrevistado);
+				$id1 = $id_entrevista_estudiante['id_entrevistado'];
 
-			try {
-				if (mysqli_query($conexion, $query_entrevistado_familiar)) {
+				$query_select_familiar = "SELECT id_ps_familiar FROM entrevista_historia_familiar WHERE id_ficha = $id_ficha";
+				$familiar = mysqli_query($conexion, $query_select_familiar);
+				$id_entrevista_historia_familiar = mysqli_fetch_assoc($familiar);
+				$id2 = $id_entrevista_historia_familiar['id_ps_familiar'];
+
+				$query_insert_ficha = "INSERT INTO entrevista_ficha (id_entrevista_estudiante, id_entrevista_historia_familiar) VALUES ('$id1', '$id2'); ";
+				if (mysqli_query($conexion, $query_insert_ficha)) {
 					$datainsert['insertsucess'] = '<p style="color: green;">Estudiante Ingresado Exitosamente</p>';
 					mysqli_close($conexion);
 				} else {
 					$datainsert['inserterror'] = '<p style="color: red;">Estudiante no ingresado, revise la información del representante.</p>';
 					mysqli_close($conexion);
 				}
-			} catch (Exception $th) {
-				echo "<br>Mensaje de error: " . $th->getMessage();
+			} else {
 			}
 		} else {
 			$datainsert['inserterror'] = '<p style="color: red;">Estudiante no ingresado, revise la información de Datos Generales.</p>';

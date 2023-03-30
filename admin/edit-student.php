@@ -33,8 +33,6 @@ if (isset($id)) {
     $año_formato = date("Y", strtotime($row_prev_año['periodo_inicio'])) . " - " . date("Y", strtotime($row_prev_año['periodo_final']));
 
 
-
-
     // Información del representante
     $query_select_representante = "SELECT * FROM `student_representante` WHERE `id_estudiante`=$id";
     $result_r = mysqli_query($conexion, $query_select_representante);
@@ -62,7 +60,7 @@ $año_final = date("Y", strtotime($respuesta['periodo_final']));
 $id_lectivo = $respuesta['id'];
 
 
-if (isset($_POST['updatestudent'])) {
+if (isset($_POST['updatestudent'])) {   
 
 
     // Informacion previa
@@ -72,7 +70,6 @@ if (isset($_POST['updatestudent'])) {
     $ruta_pdf_anterior = trim($_FILES['prev_doc_senescyt']['tmp_name']);
     $doc_senescyt = $prev_ci . date('Y-m-d-m-s') . '.' . $doc_senescyt;
     $ruta_pdf_nuevo = trim('documents/' . $doc_senescyt);
-
     $curso_matricular = $_POST['grado_estudiantil_prev'];
 
 
@@ -93,8 +90,8 @@ if (isset($_POST['updatestudent'])) {
     $descuento = trim($_POST['descuento']);
     $observaciones = trim($_POST['observaciones']);
 
-    $query_estudiante = "INSERT INTO `student_info` ( `matricula`, `tipo`, `last_name`, `name`, `grado_estudiantil`, `birthdate`, `nacionalidad`, `sexo`, `direccion`, `sector`, `photo`, `observaciones`, `descuento`) 
-	VALUES ('$matricula', '$tipo', '$last_name', '$name', '$curso_matricular', '$birthdate', '$nacionalidad', '$sexo', '$address', '$sector', '$photo', '$observaciones', '$descuento');";
+    $query_estudiante = "INSERT INTO `student_info` ( `matricula`, `cedula`, `tipo`, `last_name`, `name`, `grado_estudiantil`, `birthdate`, `nacionalidad`, `sexo`, `direccion`, `sector`, `photo`, `observaciones`, `descuento`) 
+	VALUES ('$matricula', '$cedula', '$tipo', '$last_name', '$name', '$curso_matricular', '$birthdate', '$nacionalidad', '$sexo', '$address', '$sector', '$photo', '$observaciones', '$descuento');";
 
 
     // INFORMACIÓN DEL REPRESENTANTE
@@ -176,6 +173,7 @@ if (isset($_POST['updatestudent'])) {
 
     $query_update_estudiante = "UPDATE student_info SET 
 	matricula = '$matricula', 
+	cedula = '$cedula', 
 	tipo = '$tipo', 
 	last_name = '$last_name', 
 	`name` = '$name', 
@@ -247,10 +245,6 @@ WHERE id_student = $id;";
         $datainsert['inserterror'] = '<p style="color: red;">Estudiante ya ha sido matriculado, revise la información de.</p>';
         mysqli_close($conexion);
     } else {
-
-        // $query_prev = "INSERT INTO student_info_prev (id_lectivo, cedula_estudiante, doc_senescyt, curso_matricular) 
-		// VALUES ('$id_lectivo', '$prev_ci', '$doc_senescyt', '$curso_matricular');";
-
         // Ejecuta la insercion de datos previos 
         if (mysqli_query($conexion, $query_updatea_previos)) {
             

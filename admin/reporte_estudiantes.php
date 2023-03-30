@@ -1,7 +1,7 @@
 <?php
 require('./fpdf/fpdf.php');
 include('./conexion.php');
-
+$id = base64_decode($_GET['id']);
 class PDF extends FPDF
 {
     // Cabecera de página
@@ -84,8 +84,13 @@ class PDF extends FPDF
 $pdf = new PDF();
 $pdf->AddPage();
 $pdf->SetFont('Arial', 'B', 16);
-$pdf->Cell(-115, 10, utf8_decode('INFORME'), 0, 0, 'C');  
+$pdf->Cell(-115, 10, utf8_decode('INFORME'), 0, 0, 'C');
 
+
+$consulta_representante = "SELECT r_name, r_last_name FROM student_representante WHERE id_estudiante = $id";
+$resultado_representante = $conexion->query($consulta_representante);
+$row_r = $resultado_representante->fetch_assoc();
+$representante = $row_r['r_name'] . " "  . $row_r['r_last_name'];
 
 $pdf->SetXY(40, 50);
 $pdf->SetFont('Arial', 'B', 13);
@@ -94,81 +99,81 @@ $pdf->Cell(25, 10, utf8_decode('PARA:'), 0, 1, 'L');
 
 $pdf->SetXY(55, 50);
 $pdf->SetFont('Arial', '', 13);
-$pdf->Cell(70, 10, utf8_decode('Sra. Maritza Sánchez'), 0, 1, 'L');
+$pdf->Cell(70, 10, utf8_decode($representante), 0, 1, 'L');
 
 
 
 $pdf->SetXY(40, 60);
 $pdf->SetFont('Arial', 'B', 13);
-$pdf->Cell(25, 10, utf8_decode('DE: '), 0,1, 'L');
+$pdf->Cell(25, 10, utf8_decode('DE: '), 0, 1, 'L');
 
 
 $pdf->SetXY(49, 60);
 $pdf->SetFont('Arial', '', 13);
-$pdf->Cell(115, 10, utf8_decode('Unidad Educativa Particular "Príncipe de Paz"'), 0,1, 'L');
+$pdf->Cell(115, 10, utf8_decode('Unidad Educativa Particular "Príncipe de Paz"'), 0, 1, 'L');
 
 
 
 $pdf->SetXY(40, 70);
 $pdf->SetFont('Arial', 'B', 13);
-$pdf->Cell(25, 10, utf8_decode('ASUNTO: '), 0,0, 'L');
+$pdf->Cell(25, 10, utf8_decode('ASUNTO: '), 0, 0, 'L');
 
 $pdf->SetXY(62, 70);
 $pdf->SetFont('Arial', '', 13);
-$pdf->Cell(70, 10, utf8_decode('Asignación de cupo.'), 0,1, 'L');
+$pdf->Cell(70, 10, utf8_decode('Asignación de cupo.'), 0, 1, 'L');
 
 
 
 
 $pdf->SetXY(40, 80);
 $pdf->SetFont('Arial', 'B', 13);
-$pdf->Cell(25, 10, utf8_decode('FECHA: '), 0,0, 'L');
+$pdf->Cell(25, 10, utf8_decode('FECHA: '), 0, 0, 'L');
 
 
 $pdf->SetXY(58, 80);
 $pdf->SetFont('Arial', '', 13);
-$pdf->Cell(70, 10, utf8_decode('21 de marzo del 2023'), 0,1, 'L');
+$pdf->Cell(70, 10, utf8_decode('21 de marzo del 2023'), 0, 1, 'L');
 
 
 $pdf->Ln();
 
-$id = base64_decode($_GET['id']);
+
 $consulta = "SELECT * FROM student_info WHERE id = $id;";
 $resultado = $conexion->query($consulta);
-$cadena1= "Luego de la entrevista y posterior análisis de la documentación de la estudiante, ";
-$cadena2= 'el Rectorado juntamente con el Departamento de Consejería Estudiantil de la Unidad Educativa Particular "Príncipe de Paz", acuerdan: otorgar el cupo solicitado por la Sra. Maritza Sánchez, representante legal de la postulante, para ';
+$cadena1 = "Luego de la entrevista y posterior análisis de la documentación de la estudiante, ";
+$cadena2 = 'el Rectorado juntamente con el Departamento de Consejería Estudiantil de la Unidad Educativa Particular "Príncipe de Paz", acuerdan: otorgar el cupo solicitado por ' . $representante. ', representante legal de la postulante, para ';
 $cadena3 = ', con las siguientes recomendaciones: ';
 $name_pdf;
 while ($row = $resultado->fetch_assoc()) {
-$matricula = $row['matricula'];
-$name_pdf=$matricula;
-$pdf->SetXY(18, 100);
-$pdf->MultiCell(175, 10, utf8_decode($cadena1 . $row['name'] . " " .$row['last_name'] . " con numero de cedula ".$row['cedula']. " ". $cadena2 . $row['grado_estudiantil'] .  $cadena3 ) ,0, 'L',false,50,50);
+    $matricula = $row['matricula'];
+    $name_pdf = $matricula;
+    $pdf->SetXY(20, 100);
+    $pdf->MultiCell(175, 10, utf8_decode($cadena1 . $row['name'] . " " . $row['last_name'] . " con numero de cedula " . $row['cedula'] . " " . $cadena2 . $row['grado_estudiantil'] .  $cadena3), 0, 'L', false, 50, 50);
 }
 
 $pdf->SetXY(36, 160);
-$pdf->Cell(158, 10, utf8_decode('-  Acompañamiento continúo en tareas y trabajos.'), 0,1, 'L');
+$pdf->Cell(158, 10, utf8_decode('-  Acompañamiento continúo en tareas y trabajos.'), 0, 1, 'L');
 $pdf->SetXY(37, 170);
-$pdf->Cell(158, 10, utf8_decode('-  Comunicación constante con la Unidad Educativa. '), 0,1, 'L');
+$pdf->Cell(158, 10, utf8_decode('-  Comunicación constante con la Unidad Educativa. '), 0, 1, 'L');
 $pdf->SetXY(37, 180);
-$pdf->Cell(158, 10, utf8_decode('-  Compromiso y participación en las actividades realizadas por la Institución'), 0,1, 'L');
+$pdf->Cell(158, 10, utf8_decode('-  Compromiso y participación en las actividades realizadas por la Institución'), 0, 1, 'L');
 $pdf->SetXY(37, 190);
-$pdf->Cell(158, 10, utf8_decode('-  Cumplimento de las obligaciones como representante legal. '), 0,1, 'L');
+$pdf->Cell(158, 10, utf8_decode('-  Cumplimento de las obligaciones como representante legal. '), 0, 1, 'L');
 
-$pdf->SetXY(22, 210);
-$pdf->Cell(158, 10, utf8_decode('Atentamente,'), 0,1, 'C');
+$pdf->SetXY(25, 210);
+$pdf->Cell(158, 10, utf8_decode('Atentamente,'), 0, 1, 'C');
 
 
 $pdf->SetXY(25, 250);
-$pdf->Cell(58, 10, utf8_decode('Master. Diego Rivas C.'), 0,1, 'C');
+$pdf->Cell(58, 10, utf8_decode('Master. Diego Rivas C.'), 0, 1, 'C');
 $pdf->SetXY(25, 256);
-$pdf->Cell(58, 10, utf8_decode('Rector'), 0,1, 'C');
+$pdf->Cell(58, 10, utf8_decode('Rector'), 0, 1, 'C');
 
 
 $pdf->SetXY(125, 250);
-$pdf->Cell(58, 10, utf8_decode('Lcdo. Rafael Largo Zh.'), 0,1, 'C');
+$pdf->Cell(58, 10, utf8_decode('Lcdo. Rafael Largo Zh.'), 0, 1, 'C');
 $pdf->SetXY(125, 256);
-$pdf->Cell(58, 10, utf8_decode('DECE'), 0,1, 'C');
+$pdf->Cell(58, 10, utf8_decode('DECE'), 0, 1, 'C');
 
 
 $pdf->Output($name_pdf, 'I');

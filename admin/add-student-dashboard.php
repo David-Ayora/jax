@@ -66,8 +66,8 @@ if (isset($_POST['addstudent'])) {
 	$descuento = trim($_POST['descuento']);
 	$observaciones = trim($_POST['observaciones']);
 
-	$query_estudiante = "INSERT INTO `student_info` ( `matricula`, `tipo`, `last_name`, `name`, `grado_estudiantil`, `birthdate`, `nacionalidad`, `sexo`, `direccion`, `sector`, `photo`, `observaciones`, `descuento`) 
-	VALUES ('$matricula', '$tipo', '$last_name', '$name', '$curso_matricular', '$birthdate', '$nacionalidad', '$sexo', '$address', '$sector', '$photo', '$observaciones', '$descuento');";
+	$query_estudiante = "INSERT INTO `student_info` ( `matricula`, `cedula`,  `tipo`, `last_name`, `name`, `grado_estudiantil`, `birthdate`, `nacionalidad`, `sexo`, `direccion`, `sector`, `photo`, `observaciones`, `descuento`) 
+	VALUES ('$matricula', '$get_cedula', '$tipo', '$last_name', '$name', '$curso_matricular', '$birthdate', '$nacionalidad', '$sexo', '$address', '$sector', '$photo', '$observaciones', '$descuento');";
 
 
 	// INFORMACIÓN DEL REPRESENTANTE
